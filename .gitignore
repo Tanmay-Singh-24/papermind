@@ -1,0 +1,15 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+
+# Vector store (rebuilt on first run)
+chroma_store/
+
+# System
+.DS_Store
