@@ -14,11 +14,30 @@ import uuid
 import tempfile
 
 import streamlit as st
+from dotenv import load_dotenv
 
 # Add the project root to the import path so `from backend.rag import ...` works
 # regardless of where streamlit is launched from.
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, PROJECT_DIR)
+
+# Resolve the Groq key before importing the backend, which builds the LLM client
+# at import time. Prefer Streamlit Cloud secrets (set in the dashboard); fall back
+# to a local .env. Reading st.secrets raises when no secrets file exists, so guard
+# it for local dev.
+load_dotenv(os.path.join(PROJECT_DIR, ".env"))
+try:
+    if "GROQ_API_KEY" in st.secrets:
+        os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
+except Exception:
+    pass
+
+if not os.environ.get("GROQ_API_KEY"):
+    st.error(
+        "GROQ_API_KEY is not set. On Streamlit Cloud, add it under "
+        "**Settings → Secrets**; for local dev, put it in a `.env` file."
+    )
+    st.stop()
 
 from backend.rag import get_response, ingest_pdf, has_documents   # noqa: E402
 
@@ -72,7 +91,7 @@ with st.sidebar:
         for name in st.session_state.ingested:
             st.markdown(f"- {name}")
     else:
-        st.info("Upload a PDF to get started.")
+        st.info("Upload a PDF above to begin, then ask questions about it in the chat.")
 
     if st.button("Clear chat"):
         st.session_state.messages = []

@@ -78,6 +78,23 @@ The first upload takes a few seconds to embed; after that, queries are fast.
 
 ---
 
+## Deploy (Streamlit Community Cloud)
+
+The app runs on the free [Streamlit Community Cloud](https://share.streamlit.io). Its disk is **ephemeral** — the vector store rebuilds from whatever PDFs are uploaded after each restart, so users start with an empty library and fill it themselves.
+
+1. **Push to GitHub.** Commit your changes and push to a GitHub repo (public or private).
+2. Go to **[share.streamlit.io](https://share.streamlit.io)** and sign in with GitHub.
+3. Click **Create app → Deploy a public app from GitHub** and select your repo and branch.
+4. Set **Main file path** to `frontend/app.py`.
+5. Open **Advanced settings → Secrets** and paste:
+   ```toml
+   GROQ_API_KEY = "your_key_here"
+   ```
+   (You can also add this later under **Settings → Secrets**.)
+6. Click **Deploy**. The first build is slow — it installs `sentence-transformers` (which pulls in PyTorch), so allow several minutes.
+
+---
+
 ## Project structure
 
 ```
@@ -89,6 +106,8 @@ papermind/
 ├── frontend/
 │   └── app.py           # Streamlit UI: PDF upload + chat (thin — logic is in the backend)
 ├── chroma_store/        # persistent vector store (created on first upload, gitignored)
+├── .streamlit/
+│   └── secrets.toml.example   # secrets format for Streamlit Cloud / local secrets.toml
 ├── .env.example         # copy to .env and add your Groq key
 ├── requirements.txt
 └── README.md
