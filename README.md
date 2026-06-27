@@ -1,5 +1,7 @@
 # 📄 PaperMind
 
+**Live app: [papermindv1.streamlit.app](https://papermindv1.streamlit.app)**
+
 **Chat with your own PDFs.** Upload one or more documents and ask questions answered *only* from their content — with citations to the source document. Ask a follow-up like *"who wrote it?"* and PaperMind understands what "it" refers to. If an answer isn't in your documents, it says so instead of guessing.
 
 A clean, self-contained Retrieval-Augmented Generation (RAG) app built with LangGraph.
